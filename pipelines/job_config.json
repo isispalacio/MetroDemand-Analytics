@@ -1,0 +1,19 @@
+{
+  "name": "MetroDemand_Analytics_Pipeline",
+  "description": "Ingesta, transformación, reconstrucción histórica y predicción horaria.",
+  "tasks": [
+    {
+      "task_key": "Procesamiento_MetroDemand",
+      "notebook_task": {
+        "notebook_path": "/Workspace/Users/<usuario>/MetroDemand_Analytics_Version_Final",
+        "source": "WORKSPACE"
+      },
+      "min_retry_interval_millis": 900000,
+      "disable_auto_optimization": true
+    }
+  ],
+  "queue": {
+    "enabled": true
+  },
+  "performance_target": "PERFORMANCE_OPTIMIZED"
+}

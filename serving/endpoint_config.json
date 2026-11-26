@@ -1,0 +1,10 @@
+{
+  "name": "metrodemanda-serving",
+  "model": "workspace.analitica.metrodemanda_modelo_definitivo",
+  "version": 1,
+  "compute": "CPU (4 GB/worker)",
+  "concurrency_min": 0,
+  "concurrency_max": 4,
+  "scale_to_zero": true,
+  "traffic_percent": 100
+}

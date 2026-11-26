@@ -1,0 +1,39 @@
+{
+  "dataframe_records": [
+    {
+      "linea": "LÍNEA A",
+      "hora_num": 7,
+      "dia_semana_num": 2,
+      "es_festivo": 0,
+      "en_horario_operacion": 1
+    },
+    {
+      "linea": "LÍNEA A",
+      "hora_num": 14,
+      "dia_semana_num": 2,
+      "es_festivo": 0,
+      "en_horario_operacion": 1
+    },
+    {
+      "linea": "LÍNEA A",
+      "hora_num": 7,
+      "dia_semana_num": 1,
+      "es_festivo": 0,
+      "en_horario_operacion": 1
+    },
+    {
+      "linea": "LÍNEA B",
+      "hora_num": 7,
+      "dia_semana_num": 2,
+      "es_festivo": 0,
+      "en_horario_operacion": 1
+    },
+    {
+      "linea": "LÍNEA A",
+      "hora_num": 4,
+      "dia_semana_num": 1,
+      "es_festivo": 0,
+      "en_horario_operacion": 0
+    }
+  ]
+}

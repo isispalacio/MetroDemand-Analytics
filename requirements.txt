@@ -1,0 +1,8 @@
+openpyxl
+holidays
+matplotlib
+pandas
+numpy
+mlflow
+requests
+databricks-sdk==0.70.0
