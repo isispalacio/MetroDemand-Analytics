@@ -16,6 +16,19 @@ Especialización en Analítica de Datos · Big Data · 2026
 - Dora Milena Estrada Muñoz
 - Maria Antonia Pino Giraldo
 
+## ✨ Resultados destacados
+
+| 🟢 Afluencia histórica consolidada | 🔵 Demanda futura estimada | 🟣 Cobertura histórica final |
+| :---: | :---: | :---: |
+| **479,24 millones** | **128,47 millones** | **100 %** |
+| Enero 2025 – julio 2026 | Agosto – diciembre 2026 | Tras la reconstrucción |
+
+| Registros históricos | Predicciones horarias | WAPE de prueba | R² de prueba |
+| :---: | :---: | :---: | :---: |
+| **57.700** | **15.300** | **10,01 %** | **0,9737** |
+
+El proyecto transforma datos públicos de movilidad en información histórica trazable, estimaciones de demanda y un servicio de predicción consultable. La afluencia consolidada incluye valores imputados; la demanda futura es una estimación, no una medición. Las métricas corresponden a julio de 2026.
+
 ## 🎯 1. Contexto y propósito
 
 La demanda del transporte masivo presenta variaciones por línea, hora y tipo de día. Contar con información histórica consistente y estimaciones de demanda permite identificar patrones de movilidad y aportar evidencia a la planificación operativa. El proyecto aborda, además, la ausencia de registros históricos mediante una reconstrucción controlada y trazable.
@@ -100,11 +113,21 @@ Se diferencian observaciones válidas, observaciones excepcionales fuera de hora
 | Registros imputados | 8.615 |
 | Registros de pronóstico | 15.300 |
 
-La imputación se distingue explícitamente de las observaciones originales. Consulte la [metodología](docs/metodologia.md) y el [diccionario de datos](docs/diccionario_datos.md).
+La reconstrucción permitió completar la cuadrícula de fechas, líneas y franjas horarias sin confundir ausencia de servicio con ausencia de información. Los 8.615 registros imputados representan aproximadamente el 14,93 % del histórico consolidado. La imputación se distingue explícitamente de las observaciones originales. Consulte la [metodología](docs/metodologia.md) y el [diccionario de datos](docs/diccionario_datos.md).
 
 ## 📈 5. Modelado y evaluación predictiva
 
 Se compararon tres escenarios: mediana histórica con observaciones, Random Forest con observaciones y Random Forest con observaciones e imputaciones. La selección se realizó por WAPE en junio de 2026; julio se reservó como prueba independiente. Posteriormente se reajustó el modelo ganador con información disponible hasta julio.
+
+### Diseño de la evaluación temporal
+
+| Etapa | Periodo | Propósito |
+|---|---|---|
+| Entrenamiento | Enero 2025 – mayo 2026 | Ajuste de candidatos |
+| Validación | Junio 2026 | Selección por WAPE |
+| Prueba independiente | Julio 2026 | Evaluación fuera de muestra |
+| Reajuste definitivo | Hasta julio 2026 | Preparación del pronóstico |
+| Predicción | Agosto – diciembre 2026 | Estimación de demanda futura |
 
 **Modelo seleccionado: mediana histórica sobre registros observados**, con niveles de respaldo por línea, hora y calendario. La selección favorece el desempeño observado, no la complejidad del algoritmo.
 
@@ -116,7 +139,7 @@ Se compararon tres escenarios: mediana histórica con observaciones, Random Fore
 | R² | 0,9737 |
 | Registros evaluados | 2.885 |
 
-Estas métricas no constituyen una garantía de precisión para agosto–diciembre de 2026.
+El resultado muestra que un modelo estadístico sencillo puede superar alternativas más complejas para este problema. El WAPE mide el error absoluto agregado respecto a la demanda observada; el R² refleja el ajuste en la prueba independiente. Ninguna de estas métricas garantiza el desempeño futuro.
 
 [Experimentos MLflow](docs/evidencias/08_Experimentos_MLflow.png) · [Ajuste definitivo](docs/evidencias/09_Ajuste_Definitivo.png)
 
@@ -166,34 +189,43 @@ El dashboard interactivo se diseñó y publicó directamente en Databricks, util
 
 [Dashboard publicado en PDF](dashboards/dashboard_publicado.pdf) · [Descripción del dashboard](dashboards/README.md)
 
-## 🗂️ 9. Estructura del repositorio
+## 💡 9. Aportes y conclusiones
 
-```text
-MetroDemand-Analytics/
-├── README.md
-├── requirements.txt
-├── .gitignore
-├── data/          # Fuentes y ubicación de carga
-├── notebooks/     # Procesamiento y despliegue
-├── pipelines/     # Configuración del Job
-├── dashboards/    # Evidencia del dashboard publicado
-├── serving/       # Cliente REST y ejemplos JSON
-└── docs/          # Arquitectura, metodología y evidencias
-```
+MetroDemand Analytics integra el ciclo de ingeniería de datos, experimentación, predicción y consumo de resultados en una misma solución. Los principales aportes son:
 
-## 🛠️ 10. Reproducción
+- **Calidad y trazabilidad:** reconstrucción de faltantes con identificación de su procedencia y preservación de las observaciones originales.
+- **Rigor predictivo:** selección de modelos mediante validación temporal y evaluación independiente, evitando utilizar información futura en el ajuste.
+- **Implementación funcional:** ejecución satisfactoria del pipeline, persistencia del modelo, registro en Unity Catalog y consulta de predicciones mediante Model Serving.
+- **Inteligencia de movilidad:** exploración de patrones por línea, hora y tipo de día, con estimaciones que pueden apoyar la planificación operativa y las decisiones basadas en datos.
 
-1. Disponer del catálogo `workspace` y volumen `default.data`; cargar los Excel de las fuentes públicas según [fuentes](data/README.md).
-2. Importar el [notebook principal](notebooks/MetroDemand_Analytics.ipynb) como `MetroDemand_Analytics_Version_Final` y ejecutar en Serverless. Utilizar un entorno aislado: el notebook crea esquemas y sobrescribe tablas.
-3. Crear el Job con la [configuración](pipelines/job_config.json), sustituyendo la ruta del usuario. No ejecutar reset sobre el Job original.
-4. Ejecutar el [notebook de despliegue](notebooks/MetroDemand_Model_Deployment.ipynb) después del principal y crear el endpoint con la versión registrada.
-5. Configurar las variables de entorno `DATABRICKS_HOST` y `DATABRICKS_TOKEN` localmente; consultar las [instrucciones de API](serving/README.md). No publicar credenciales.
-6. Consultar la [documentación del dashboard](dashboards/README.md) y su exportación PDF. La visualización interactiva se configuró en Databricks.
+El alcance es predictivo y analítico: no se estiman frecuencias óptimas, capacidad disponible ni ahorros efectivos. Los beneficios operativos son aplicaciones potenciales que requieren información y evaluación adicionales.
 
-## 💡 11. Alcance, limitaciones y aporte
+## 📚 10. Recursos y reproducción
 
-La solución permite explorar patrones de movilidad, anticipar escenarios de demanda y aportar soporte a decisiones basadas en datos. No mide mejoras efectivas de experiencia, ahorro de recursos, capacidad disponible ni frecuencias óptimas; estos son posibles usos posteriores de los resultados.
+| Recurso | Acceso |
+|---|---|
+| Procesamiento y modelado | [Notebook principal](notebooks/MetroDemand_Analytics.ipynb) |
+| Registro y despliegue | [Notebook de despliegue](notebooks/MetroDemand_Model_Deployment.ipynb) |
+| Orquestación | [Configuración del Job](pipelines/job_config.json) |
+| Datos | [Fuentes e instrucciones de carga](data/README.md) |
+| Documentación | [Metodología](docs/metodologia.md) · [Diccionario de datos](docs/diccionario_datos.md) |
+| Visualización | [Dashboard publicado](dashboards/dashboard_publicado.pdf) |
+| API | [Instrucciones de consumo](serving/README.md) |
+| Evidencias | [13 capturas de implementación](docs/evidencias/) |
 
-Los notebooks se adaptaron para publicación eliminando salidas y metadatos de sesión y parametrizando referencias del entorno. Se validó su estructura y sintaxis localmente, pero no se reejecutaron las versiones portables en Databricks. El cliente REST externo tampoco se probó contra el servicio; las evidencias corresponden a pruebas en la interfaz. El PDF documenta la visualización publicada; no es un archivo de importación de dashboards. Los datos de entrada se obtienen de los enlaces oficiales indicados en la sección de fuentes.
+<details>
+<summary>Instrucciones técnicas y condiciones de reproducción</summary>
 
-[Consultar las 13 evidencias de implementación](docs/evidencias/).
+1. Cargar los Excel oficiales en `/Volumes/workspace/default/data`.
+2. Importar el notebook principal como `MetroDemand_Analytics_Version_Final` y ejecutarlo en Serverless, en un entorno aislado porque crea esquemas y sobrescribe tablas.
+3. Crear un Job nuevo con la configuración suministrada, ajustando la ruta del notebook al usuario.
+4. Ejecutar el notebook de despliegue, ajustar las referencias al experimento y al run definitivo y crear el endpoint con la versión registrada.
+5. Configurar `DATABRICKS_HOST` y `DATABRICKS_TOKEN` para consumir la API sin publicar credenciales.
+
+Las versiones publicadas de los notebooks se adaptaron para retirar salidas y metadatos de sesión y parametrizar referencias del entorno. Se validaron localmente, sin una nueva ejecución en Databricks. Las pruebas del endpoint se realizaron desde su interfaz; el cliente REST externo no se ejecutó contra el servicio. El PDF es evidencia de la visualización publicada, no una configuración importable.
+
+</details>
+
+---
+
+**MetroDemand Analytics · UNAULA · 2026**
